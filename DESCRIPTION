@@ -1,0 +1,21 @@
+Package: ezASCAT
+Title: Conveniently perform ASCAT copy-number analysis in R
+Version: 0.9.00
+Authors@R: 
+    person(given = "Anand",
+           family = "Mayakonda",
+           role = c("aut", "cre"),
+           email = "anand_mt@hotmail.com",
+           comment = c(ORCID = "0000-0003-1162-687X"))
+Description: This package attempts make it easier to perform ASCAT analysis completely in R from tumor-normal pairs.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+LinkingTo: 
+    Rhtslib,
+    zlibbioc
+SystemRequirements: GNU make
+depends:
+    data.table, DNAcopy, ASCAT
