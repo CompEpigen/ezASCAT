@@ -1,10 +1,9 @@
 #'Plot results from mosdepth output
 #' @param bed mosdepth output
-#' @param plot_file basename for output plot
 #' @param col Colors. Default c("#95a5a6", "#7f8c8d")
 #' @export
 
-plot_mosdepth = function(bed = NULL, plot_file = NULL, col = c("#95a5a6", "#7f8c8d")){
+plot_mosdepth = function(bed = NULL, col = c("#95a5a6", "#7f8c8d")){
   
   tum_cov = data.table::fread(input = bed)
   colnames(tum_cov) = c("chr", "start", "end", "doc")
@@ -63,20 +62,14 @@ plot_mosdepth = function(bed = NULL, plot_file = NULL, col = c("#95a5a6", "#7f8c
   
   cat("Plotting..")
   
-  if(is.null(plot_file)){
-    plot_file = paste0(basename(bed), ".png")
-  }else{
-    plot_file = paste0(plot_file, ".png")
-  }
+  #png(filename = paste0(basename(bed), ".png"), width = 1024, height = 600, bg = "white")
   
-  png(filename = paste0(basename(bed), ".png"), width = 1024, height = 600, bg = "white")
-  
-  par(mfrow = c(2, 1))
+  par(mfrow = c(2, 1), mar = c(3, 3, 2, 1))
   
   plot(NA, xlim = c(0, sum(chr.lens)), ylim = c(med_cov-50, med_cov+50), frame.plot = FALSE, axes = FALSE, xlab = NA, ylab = NA)
   temp = lapply(seq_along(all_depth_spl), function(idx){
     x = all_depth_spl[[idx]]
-    points(x$Start_Position_updated, x$doc, pch = "-", col = cols[idx])
+    points(x$Start_Position_updated, x$doc, pch = 19, cex = 0.5, col = cols[idx])
     rect(xleft = x[, Start_Position_updated][1], ybottom = med_cov,
          xright = x[,End_Position_updated][nrow(x)], ytop = med_cov)
   })
@@ -89,7 +82,7 @@ plot_mosdepth = function(bed = NULL, plot_file = NULL, col = c("#95a5a6", "#7f8c
   plot(NA, xlim = c(0, sum(chr.lens)), ylim = c(-3, 3), frame.plot = FALSE, axes = FALSE, xlab = NA, ylab = NA)
   temp = lapply(seq_along(all_depth_spl), function(idx){
     x = all_depth_spl[[idx]]
-    points(x$Start_Position_updated, x$doc_norm, pch = "-", col = cols[idx])
+    points(x$Start_Position_updated, x$doc_norm, pch = 19, cex = 0.5, col = cols[idx])
     rect(xleft = x[, Start_Position_updated][1], ybottom = log2(med_cov),
          xright = x[,End_Position_updated][nrow(x)], ytop = log2(med_cov))
   })
@@ -98,6 +91,6 @@ plot_mosdepth = function(bed = NULL, plot_file = NULL, col = c("#95a5a6", "#7f8c
   axis(side = 2, at = seq(-3, 3, 1), las = 2)
   title(main = "DOC Median centered")
   
-  dev.off()
+  #dev.off()
   
 }

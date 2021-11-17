@@ -4,14 +4,22 @@
 \alias{plot_mosdepth_tn}
 \title{Plot results from mosdepth output for Tumor/Normal pairs}
 \usage{
-plot_mosdepth_tn(t_bed = NULL, n_bed = NULL, plot_file = NULL, col = NULL)
+plot_mosdepth_tn(
+  t_bed = NULL,
+  n_bed = NULL,
+  segment = TRUE,
+  sample_name = NULL,
+  col = c("#95a5a6", "#7f8c8d")
+)
 }
 \arguments{
 \item{t_bed}{mosdepth output from tumor}
 
 \item{n_bed}{mosdepth output from normal}
 
-\item{plot_file}{basename for output plot}
+\item{segment}{Whether to perform CBS segmentation. Default TRUE}
+
+\item{sample_name}{sample name. Default parses from \code{t_bed}}
 
 \item{col}{Colors. Default c("#95a5a6", "#7f8c8d")}
 }

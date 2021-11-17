@@ -24,7 +24,7 @@ prep_ascat(
 \item{normalize}{If TRUE, normalizes for library size}
 }
 \value{
-An \code{\lik{ascat.loadData}} object; ascat data structure
+An \code{\link{ascat.loadData}} object; ascat data structure
 }
 \description{
 Prepare input files for ASCAT

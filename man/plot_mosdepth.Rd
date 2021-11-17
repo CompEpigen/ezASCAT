@@ -4,12 +4,10 @@
 \alias{plot_mosdepth}
 \title{Plot results from mosdepth output}
 \usage{
-plot_mosdepth(bed = NULL, plot_file = NULL, col = c("#95a5a6", "#7f8c8d"))
+plot_mosdepth(bed = NULL, col = c("#95a5a6", "#7f8c8d"))
 }
 \arguments{
 \item{bed}{mosdepth output}
-
-\item{plot_file}{basename for output plot}
 
 \item{col}{Colors. Default c("#95a5a6", "#7f8c8d")}
 }

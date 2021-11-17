@@ -4,7 +4,7 @@
 #' @param sample_name Sample name. Used as a basename for output files. Default NA, parses from t_counts file.
 #' @param min_depth Min read depth required to consider a marker. Default 30
 #' @param normalize If TRUE, normalizes for library size
-#' @return An \code{\lik{ascat.loadData}} object; ascat data structure
+#' @return An \code{\link{ascat.loadData}} object; ascat data structure
 #' @export
 prep_ascat = function(t_counts = NULL, n_counts = NULL, sample_name = NA, min_depth = 30, normalize = FALSE){
 

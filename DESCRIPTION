@@ -19,3 +19,5 @@ LinkingTo:
 SystemRequirements: GNU make
 depends:
     data.table, DNAcopy, ASCAT
+Imports:
+    data.table, DNAcopy, ASCAT
