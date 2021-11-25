@@ -96,7 +96,7 @@ get_counts = function(t_bam = NULL, n_bam = NULL, build = "hg19", prefix = NULL,
 
   cat("Fetching readcounts from BAM files..\n")
   parallel::mclapply(seq_along(bam), function(idx){
-    cat("Processing", bam[idx], ":\n")
+    cat("Processing", basename(bam[idx]), ":\n")
     withCallingHandlers(suppressWarnings(invisible(.Call("ntc", bam[idx], lfile, mapq, sam_flag, fa, op_files[idx],  PACKAGE = "ezASCAT"))))
   }, mc.cores = nthreads)
 

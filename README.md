@@ -7,7 +7,7 @@ Although there exists [ascatNgs](https://github.com/cancerit/ascatNgs), it requi
 ## Installation
 
 ``` r
-remotes::install_github(repo = "poisonalien/ezASCAT")
+remotes::install_github(repo = "CompEpigen/ezASCAT")
 ```
 
 ## Usage

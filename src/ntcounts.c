@@ -10,9 +10,41 @@
 
 #include <R.h>
 
+int countlines(char *filename){
+  // count the number of lines in the file called filename                                    
+  FILE *fp = fopen(filename,"r");
+  int ch=0;
+  int lines=0;
+  
+  if (fp == NULL){
+    return 0;  
+  }
+  
+  while(!feof(fp)){
+    ch = fgetc(fp);
+    if(ch == '\n'){
+      lines++;
+    }
+  }
+  fclose(fp);
+  return lines;
+}
+
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
+
+// Progress bar modified from: https://stackoverflow.com/a/36315819
+void printProgress(double percentage, int done, int tot) {
+  int val = (int) (percentage * 100);
+  int lpad = (int) (percentage * PBWIDTH);
+  int rpad = PBWIDTH - lpad;
+  fprintf(stderr, "\r%3d%% [%.*s%*s] %d/%d", val, lpad, PBSTR, rpad, "", done, tot);
+  fflush(stdout);
+}
+
 void ntcounts(const char *bam, const char *bedfile, uint32_t q, uint32_t F, const char *fafile, const char *op){
 
-  int vars_gt = 0; //No. of BED entries
+  int vars_gt = 1; //No. of BED entries
 
   hts_verbose = 0; //suppresses htslib warnings
 
@@ -21,11 +53,13 @@ void ntcounts(const char *bam, const char *bedfile, uint32_t q, uint32_t F, cons
   strcat(tsv_file, ".tsv");
 
   //Open bed file
+  int nloci = countlines(bedfile);
+  
   FILE *bed_fp;
   bed_fp = fopen(bedfile, "r");
   char buff[1000];
 
-  //Open TSV report file and print HTML header
+  //Open TSV report file 
   FILE *tsv_fp;
   tsv_fp = fopen(tsv_file, "w" );
 
@@ -89,16 +123,18 @@ void ntcounts(const char *bam, const char *bedfile, uint32_t q, uint32_t F, cons
     int32_t tot_reads = 0;
     float nt[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
+    printProgress(vars_gt/(double)nloci, vars_gt, nloci);
     vars_gt = vars_gt + 1;
 
-    if(vars_gt % 1000 == 0){
-      Rprintf("Processed %d entries..\n", vars_gt);
-    }
+    
+//if(vars_gt % 1000 == 0){
+  //    Rprintf("%d | ", vars_gt); //verbose processed loci
+    //}
 
     //For every read in the BAM file of target region
     while(sam_itr_next(fp_in, samitr, aln) > 0){
 
-      int32_t pos = aln->core.pos ; //left most position of alignment in zero based coordianate (0-based)
+      int32_t pos = aln->core.pos ; //left most position of alignment in zero based coordinate (0-based)
       uint32_t len = aln->core.l_qseq; //length of the read.
       uint32_t* cig = bam_get_cigar(aln);
       uint8_t *qs = bam_get_seq(aln); //quality string
@@ -194,6 +230,7 @@ void ntcounts(const char *bam, const char *bedfile, uint32_t q, uint32_t F, cons
   sam_close(fp_in);
   fclose(bed_fp);
   fclose(tsv_fp);
+  Rprintf("\n Done!");
 }
 
 SEXP ntc(SEXP filename, SEXP bedname, SEXP qual, SEXP flag, SEXP fa, SEXP op_file){
