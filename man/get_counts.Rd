@@ -8,7 +8,7 @@ get_counts(
   t_bam = NULL,
   n_bam = NULL,
   build = "hg19",
-  prefix = FALSE,
+  prefix = NULL,
   add = TRUE,
   mapq = 10,
   sam_flag = 1024,
@@ -24,7 +24,7 @@ get_counts(
 
 \item{n_bam}{Normal BAM file. Recommended}
 
-\item{build}{Default hg19. Mutually exclusive with \code{loci}. Currently supported \code{hg19} and \code{hg38} and includes ~900K SNPs from Affymetrix Genome-Wide Human SNP 6.0 Array.}
+\item{build}{Default hg19. Mutually exclusive with \code{loci}. Currently supported \code{hg19} and \code{hg38} and includes ~900K SNPs from Affymetrix Genome-Wide Human SNP 6.0 Array. SNP file has no \code{chr} prefix.}
 
 \item{prefix}{Prefix to add or remove from contig names in loci file. For example, in case BAM files have no \code{chr} prefix.}
 

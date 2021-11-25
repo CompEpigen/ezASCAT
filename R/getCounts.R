@@ -1,7 +1,7 @@
 #' Extract nucleotide counts from targeted loci (SNPs)
 #' @param t_bam Tumor BAM file. Required
 #' @param n_bam Normal BAM file. Recommended
-#' @param build Default hg19. Mutually exclusive with `loci`. Currently supported `hg19` and `hg38` and includes ~900K SNPs from Affymetrix Genome-Wide Human SNP 6.0 Array.
+#' @param build Default hg19. Mutually exclusive with `loci`. Currently supported `hg19` and `hg38` and includes ~900K SNPs from Affymetrix Genome-Wide Human SNP 6.0 Array. SNP file has no `chr` prefix.
 #' @param prefix Prefix to add or remove from contig names in loci file. For example, in case BAM files have no `chr` prefix.
 #' @param add If prefix is used, default is to add prefix to contig names in loci file. If false prefix will be removed from contig names.
 #' @param mapq Map quality. Default 10
@@ -15,11 +15,11 @@
 #' @useDynLib ezASCAT, .registration = TRUE
 #' @import data.table
 
-get_counts = function(t_bam = NULL, n_bam = NULL, build = "hg19", prefix = FALSE, add = TRUE,
+get_counts = function(t_bam = NULL, n_bam = NULL, build = "hg19", prefix = NULL, add = TRUE,
                       mapq = 10, sam_flag = 1024, loci = NULL, fa = NULL, op = NULL,
                       zerobased = FALSE, nthreads = 4){
 
-  if(is.null(t_bam)) stop("Missing tumor or normal bam file!")
+  if(is.null(t_bam)) stop("Missing tumor BAM file!")
   bam = c(t_bam)
 
   if(!is.null(n_bam)){
