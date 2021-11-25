@@ -90,13 +90,13 @@ prep_ascat = function(t_counts = NULL, n_counts = NULL, sample_name = NA, min_de
 
   ascat_obj = NULL
   if("ASCAT" %in% rownames(installed.packages())){
-    message("Running ASCAT::ascat.loadData:")
+    message("Running ASCAT::ascat.loadData()")
     ascat_obj = ASCAT::ascat.loadData(Tumor_LogR_file = paste0(sample_name, ".tumour.logR.txt"),
                                       Tumor_BAF_file = paste0(sample_name, ".tumour.BAF.txt"),
                                       Germline_LogR_file = paste0(sample_name, ".normal.logR.txt"),
                                       Germline_BAF_file = paste0(sample_name, ".normal.BAF.txt"),
                                       chrs = c(1:22, "X", "Y"), sexchromosomes = c("X", "Y"))
-    message("Running ASCAT::ascat.plotRawData:")
+    message("Running ASCAT::ascat.plotRawData()")
     ASCAT::ascat.plotRawData(ASCATobj = ascat_obj, img.prefix = sample_name)
     message("Returned ASCAT object!")
   }

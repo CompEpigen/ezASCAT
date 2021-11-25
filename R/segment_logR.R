@@ -22,7 +22,7 @@ segment_logR = function(tumor_logR = NULL, sample_name = "tumor"){
 
   cn = DNAcopy::smooth.CNA(cn)
   cn = DNAcopy::segment(cn, alpha = 0.01, nperm = 10000, p.method = 'hybrid', min.width = 5, kmax = 25, nmin = 210,
-                        eta = 0.05, trim = 0.025, undo.SD = 3, undo.prune = 0.05, undo.splits = 'prune', verbose = 2)
+                        eta = 0.05, trim = 0.025, undo.SD = 3, undo.prune = 0.05, undo.splits = 'sdundo', verbose = 2)
 
   .dnaCopy_plotter(dc = cn)
 
