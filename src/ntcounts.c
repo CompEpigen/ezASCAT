@@ -230,7 +230,7 @@ void ntcounts(const char *bam, const char *bedfile, uint32_t q, uint32_t F, cons
   sam_close(fp_in);
   fclose(bed_fp);
   fclose(tsv_fp);
-  Rprintf("\n Done!");
+  //Rprintf("\n Done!");
 }
 
 SEXP ntc(SEXP filename, SEXP bedname, SEXP qual, SEXP flag, SEXP fa, SEXP op_file){

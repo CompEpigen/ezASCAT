@@ -18,7 +18,8 @@ remotes::install_github(repo = "CompEpigen/ezASCAT")
 
 ### Step-1: Get nucleotide counts at the marker loci with `get_counts`
 
-Below command will generate two tsv files `tumor_nucleotide_counts.tsv` and `normal_nucleotide_counts.tsv` that can be used for downstream analysis. Note that the function will process ~900K SNPs from [Affymetrix Genome-Wide Human SNP 6.0 Array](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6801) which will take ca.15 minutes on a decent computer. Currently `hg19` and `hg38` are supported.
+Below command will generate two tsv files `tumor_nucleotide_counts.tsv` and `normal_nucleotide_counts.tsv` that can be used for downstream analysis. Note that the function will process ~900K SNPs from [Affymetrix Genome-Wide Human SNP 6.0 Array](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL6801). The process can be sped up by increasing `nthreads` which will launch each chromosome on a separate thread. 
+Currently `hg19` and `hg38` are supported.
 
 ```r
 library("ezASCAT")
@@ -103,10 +104,10 @@ ascat.output = ASCAT::ascat.runAscat(ascat.bc)
 The returned `ASCAT` object can be processed with _ASCAT without matched normal data protocol_:
 
 ```r
-ascat.gg = ascat.predictGermlineGenotypes(ascat.bc) 
-ascat.bc = ascat.aspcf(ascat.bc,ascat.gg=ascat.gg) 
-ascat.plotSegmentedData(ascat.bc)
-ascat.output = ascat.runAscat(ascat.bc) 
+ascat.gg = ezASCAT::ascat.predictGermlineGenotypes(ascat.bc) 
+ascat.bc = ezASCAT::ascat.aspcf(ascat.bc,ascat.gg=ascat.gg) 
+ezASCAT::ascat.plotSegmentedData(ascat.bc)
+ascat.output = ezASCAT::ascat.runAscat(ascat.bc) 
 ```
 
 ### CBS segmentation
