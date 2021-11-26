@@ -16,7 +16,8 @@ get_counts(
   fa = NULL,
   op = NULL,
   zerobased = FALSE,
-  nthreads = 4
+  nthreads = 4,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -42,7 +43,9 @@ get_counts(
 
 \item{zerobased}{are coordinates zero-based. Default FALSE. Use only if \code{loci} is used.}
 
-\item{nthreads}{Number of threads to use. Each BAM file will be launched on a separate thread. Works only on Unix and macOS.}
+\item{nthreads}{Number of threads to use. Default 4. Each chromosome will be launched on a separate thread. Works only on Unix and macOS.}
+
+\item{verbose}{Default TRUE}
 }
 \description{
 Extract nucleotide counts from targeted loci (SNPs)

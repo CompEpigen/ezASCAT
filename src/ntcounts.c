@@ -123,7 +123,7 @@ void ntcounts(const char *bam, const char *bedfile, uint32_t q, uint32_t F, cons
     int32_t tot_reads = 0;
     float nt[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
-    printProgress(vars_gt/(double)nloci, vars_gt, nloci);
+    //printProgress(vars_gt/(double)nloci, vars_gt, nloci);
     vars_gt = vars_gt + 1;
 
     

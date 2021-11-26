@@ -10,14 +10,15 @@
 #' @param zerobased are coordinates zero-based. Default FALSE. Use only if `loci` is used.
 #' @param op Output file basename. Default parses from BAM file
 #' @param fa Indexed fasta file. If provided, extracts and adds reference base to the output tsv.
-#' @param nthreads Number of threads to use. Each BAM file will be launched on a separate thread. Works only on Unix and macOS.
+#' @param nthreads Number of threads to use. Default 4. Each chromosome will be launched on a separate thread. Works only on Unix and macOS.
+#' @param verbose Default TRUE
 #' @export
 #' @useDynLib ezASCAT, .registration = TRUE
 #' @import data.table
 
 get_counts = function(t_bam = NULL, n_bam = NULL, build = "hg19", prefix = NULL, add = TRUE,
                       mapq = 10, sam_flag = 1024, loci = NULL, fa = NULL, op = NULL,
-                      zerobased = FALSE, nthreads = 4){
+                      zerobased = FALSE, nthreads = 4, verbose = TRUE){
 
   if(is.null(t_bam)) stop("Missing tumor BAM file!")
   bam = c(t_bam)
@@ -91,19 +92,56 @@ get_counts = function(t_bam = NULL, n_bam = NULL, build = "hg19", prefix = NULL,
     fa = "NULL"
   }
 
-  lfile = tempfile(pattern = 'bamrc_', fileext = ".tsv")
-  data.table::fwrite(x = loci[,c(1:2)], file = lfile, col.names = FALSE, sep = "\t", row.names = FALSE)
-
-  cat("Fetching readcounts from BAM files..\n")
-  parallel::mclapply(seq_along(bam), function(idx){
-    cat("Processing", basename(bam[idx]), ":\n")
-    withCallingHandlers(suppressWarnings(invisible(.Call("ntc", bam[idx], lfile, mapq, sam_flag, fa, op_files[idx],  PACKAGE = "ezASCAT"))))
-  }, mc.cores = nthreads)
-
-  res = lapply(seq_along(op_files), function(x){
-    data.table::fread(file = paste0(op_files[x], ".tsv"), sep = "\t", header = TRUE)
+  loci = split(loci, loci$Chr)
+  
+  loci_files = lapply(1:length(loci), function(idx){
+    chrname = names(loci)[idx]
+    lfile = tempfile(pattern = paste0("chr",chrname, "_"), fileext = paste0("_loci.tsv"))
+    data.table::fwrite(x = loci[[idx]][,c(1:2)], file = lfile, col.names = FALSE, sep = "\t", row.names = FALSE)
+    lfile
   })
+  
+  if(verbose){
+    cat("Fetching readcounts from BAM files..\n")  
+  }
+  
+  res = list()
+  bam_idxstats = list() #Store samtools idxstats
+  
+  for(b in bam){
+    
+    if(verbose){
+      cat("Processing", basename(b), ":\n")  
+    }
+    
+    bam_counts = parallel::mclapply(loci_files, function(lfile){
+      chr = unlist(data.table::tstrsplit(basename(path = lfile), split = "_", keep = 1))
+      
+      if(verbose){
+        system(paste("echo ' current chromosome:",chr,"'"))  
+      }
+      
+      opcount = tempfile(pattern = paste0(chr, "_", basename(b)), fileext = ".tsv")
+      
+      withCallingHandlers(suppressWarnings(invisible(.Call("ntc", b, lfile, mapq, sam_flag, fa, opcount,  PACKAGE = "ezASCAT"))))
+      
+      paste0(opcount, ".tsv")
+    }, mc.cores = nthreads)
+    
+    #print(unlist(bam_counts, use.names = FALSE))
+    
+    idxstat = apply(data.table::fread(file = bam_counts[[1]], nrow = 1, sep = "\t"), 1, paste, collapse = " ")
+    bam_idxstats[[length(bam_idxstats)+1]] = idxstat
+    res[[length(res)+1]] = data.table::rbindlist(lapply(bam_counts, data.table::fread), use.names = TRUE, fill = TRUE)
+    lapply(bam_counts, unlink)
+  }
+  
   names(res) = op
+  
+  lapply(seq_along(res), function(idx){
+    cat(paste0(bam_idxstats[[idx]], "\n"), file = paste0(op_files[[idx]], ".tsv"))
+    data.table::fwrite(x = res[[idx]], file = paste0(op_files[[idx]], ".tsv"), append = TRUE, sep = "\t", na = "NA", quote = FALSE, col.names = TRUE)
+  })
 
   res
 }
