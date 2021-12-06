@@ -104,10 +104,10 @@ ascat.output = ASCAT::ascat.runAscat(ascat.bc)
 The returned `ASCAT` object can be processed with _ASCAT without matched normal data protocol_:
 
 ```r
-ascat.gg = ezASCAT::ascat.predictGermlineGenotypes(ascat.bc) 
-ascat.bc = ezASCAT::ascat.aspcf(ascat.bc,ascat.gg=ascat.gg) 
-ezASCAT::ascat.plotSegmentedData(ascat.bc)
-ascat.output = ezASCAT::ascat.runAscat(ascat.bc) 
+ascat.gg = ASCAT::ascat.predictGermlineGenotypes(ascat.bc) 
+ascat.bc = ASCAT::ascat.aspcf(ascat.bc,ascat.gg=ascat.gg) 
+ASCAT::ascat.plotSegmentedData(ascat.bc)
+ascat.output = ASCAT::ascat.runAscat(ascat.bc) 
 ```
 
 ### CBS segmentation
